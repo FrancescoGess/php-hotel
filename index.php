@@ -39,6 +39,16 @@ $hotels = [
 
 ];
 
+
+$filter_parking = isset($_GET['check-parking']) ? true : false;
+$filter_vote = $_GET['filter-vote'] ?? false;
+
+if($filter_parking)
+    $hotels = array_filter($hotels, fn($hotel) => $hotel['parking']);
+
+if($filter_vote)
+    $hotels = array_filter($hotels, fn($hotel) => $hotel['vote'] >= $filter_vote);
+
 ?>
 
 <!DOCTYPE html>
@@ -52,7 +62,37 @@ $hotels = [
 <body>
 
 <main>
-<div class="card container p-3">
+
+<div class="card mt-5 container mb-3">
+        <div class="card-body">
+            <form method="GET">
+
+                <div class="form-check">
+                    <input 
+                    class="form-check-input" 
+                    type="checkbox" 
+                    id="check-parking" 
+                    name="check-parking"
+                    <?= $filter_parking ? 'checked' : '' ?>>
+                    
+                    <label class="form-check-label mb-3" for="check-parking">
+                        Con parcheggio
+                    </label>
+                </div>
+
+                <div class="mb-3">
+                    <label for="filter-vote" class="form-label">Voto:</label>
+                    <input type="number" value="<?= $filter_vote ?>" class="form-control" id="filter-vote" name="filter-vote" min="1" max="5">
+                </div>
+
+                <button class="btn btn-success">Filtra</button>
+
+            </form>
+        </div>
+    </div>
+
+
+    <div class="card container p-3">
         <table class="table table-hover m-0">
             <thead class="text-center">
                 <tr>
